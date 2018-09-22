@@ -3,8 +3,6 @@ import sqlite3 as sq
 import os
 import gzip
 
-#TO-DO: DON'T INSERT DUPLICATE ROWS
-
 def create(amazon_file_path, db_file_path, table_name):
     conn = sq.connect(db_file_path)
     chunksize = 100000
