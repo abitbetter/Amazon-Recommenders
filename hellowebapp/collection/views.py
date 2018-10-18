@@ -27,10 +27,11 @@ class HomeView(TemplateView):
 	def get(self,request):
 		 form = HomeForm()
 		 return render(request, self.template_name, {'form': form})
-		 
+
 	def post(self,request):
 		form = HomeForm(request.POST)
 		if form.is_valid():
-			text = form.cleaned_data('post')
+			text = form.cleaned_data['post']
+		form = HomeForm()
 		args = {'form': form, 'text': text}
 		return render(request, self.template_name, args)
