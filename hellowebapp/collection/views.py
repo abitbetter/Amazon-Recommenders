@@ -23,9 +23,14 @@ def result_detail(request, slug):
 	})
 
 class HomeView(TemplateView):
-	template_name = 'index.html'
+	template_name = 'base.html'
 	def get(self,request):
 		 form = HomeForm()
 		 return render(request, self.template_name, {'form': form})
-# class AboutView(TemplateView):
-# 	template_name = "results.html"
+		 
+	def post(self,request):
+		form = HomeForm(request.POST)
+		if form.is_valid():
+			text = form.cleaned_data('post')
+		args = {'form': form, 'text': text}
+		return render(request, self.template_name, args)
