@@ -22,11 +22,12 @@ from django.contrib import admin
 #Django's generic view
 from django.views.generic import TemplateView
 from collection import views
+from collection.views import HomeView
 
 #from django.conf.urls import path
 
 urlpatterns = [
-    path('', views.index, name='home'),
+    path('', HomeView.as_view(), name='home'),
     path('about/',
         TemplateView.as_view(template_name='about.html'),
         name='about'),
@@ -36,5 +37,5 @@ urlpatterns = [
     path('results/',views.results,name='results'),
     path('results/<slug>/', views.result_detail,
         name='result_detail'),
-    path('admin/', admin.site.urls),
+    path('admin/', admin.site.urls)
 ]
