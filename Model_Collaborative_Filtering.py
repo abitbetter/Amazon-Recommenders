@@ -1,5 +1,7 @@
 import pandas as pd
 import surprise
+import sqlite3 as sq
+import sklearn
 
 #Set up data
 path = '/db/amazon_reviews.db'
@@ -12,9 +14,9 @@ def import_data(db_path):
                     customer_id,
                     product_id,
                     star_rating
-                FROM amazon_music_reviews
+                FROM books
                 WHERE LENGTH(STAR_RATING) < 2
-                AND product_id = 'B00Q9KEZV0' LIMIT 10000''', conn)
+                LIMIT 100000''', conn)
 
     df['star_rating'] = df['star_rating'].astype(float)
     df['star_rating'] = df['star_rating'].astype(int) #convert rating to integer type
@@ -41,19 +43,21 @@ reader = Reader(rating_scale=(1, 5))
 data = Dataset.load_from_df(df[['userID', 'itemID', 'rating']], reader)
 
 
+from surprise import KNNBasic, SVD
+from surprise import NMF, model_selection
 
+#KNN   - NOT WORKING --TOO MEMORY INTENSIVE
+#algo = KNNBasic()
+#model_selection.cross_validate(algo, data, measures=['RMSE'])
 
-# Split data into 5 folds
-
-data.split(n_folds=5)
-
-from surprise import SVD, evaluate
-from surprise import NMF
 
 # svd
 algo = SVD()
-evaluate(algo, data, measures=['RMSE'])
+model_selection.cross_validate(algo, data, measures=['RMSE'], cv=5, verbose=True)
 
 # nmf
 algo = NMF()
-evaluate(algo, data, measures=['RMSE'])
+model_selection.cross_validate(algo, data, measures=['RMSE'], cv=5, verbose=True)
+
+
+
