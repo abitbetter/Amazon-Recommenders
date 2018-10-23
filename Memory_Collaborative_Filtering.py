@@ -1,7 +1,15 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Mon Oct 22 19:21:14 2018
+
+@author: arjun
+"""
+
 import pandas as pd
 import numpy as np
 import sqlite3 as sq
 from math import sqrt
+from scipy import stats, spatial
 
 path = 'C:/users/arjun/Desktop/amazon.db'
 
@@ -25,7 +33,7 @@ def import_data(db_path):
 
     return df
 
-#df = import_data(path)
+df = import_data(path)
 
 
 def euclidean_similarity(user1, user2, data):
@@ -57,31 +65,63 @@ def euclidean_similarity(user1, user2, data):
 
     return user1, user2, inverted_euclidean_distance
 
-'''
-for a in df['customer_id']:
-    for b in df['customer_id']:
-        print(euclidean_similarity(a, b, df))
-'''
 
 #pearson correlation function -- still working on this
 def pearson_similarity(user1, user2, data):
     #instead of storing data in both_rated why not just use counter, if it is just a flag for
-    both_rated = {}
+    both_rated = []
 
     u1_data = data.loc[data['customer_id']==user1]
     u2_data = data.loc[data['customer_id']==user2]
 
     for item in u1_data['product_id']:
         if item in u2_data['product_id'].unique():
-            both_rated[item]=1
+            both_rated.append(item)
 
     if len(both_rated)==0:
         return 0
+    
+    #u1_data = u1_data['star_rating'][u1_data['product_id'].isin(both_rated)].tolist()
+    #u2_data = u2_data['star_rating'][u2_data['product_id'].isin(both_rated)].tolist()
+    
+    u1_data = [1, 2,6]
+    u2_data = [1, 3, 4]
+    
+    pearson_corr = scipy.stats.pearsonr(u1_data, u2_data)
+    
+    return pearson_corr
 
-    '''add up all preferences of each user'''
-    u1_pref_sum = sum(u1_data['star_rating'].tolist())
-    u2_pref_sum = sum(u2_data['star_rating'].tolist())
+def cosine_similarity(user1, user2, data):
+    
+    both_rated = []
+    
+    
+    u1_data = data.loc[data['customer_id']==user1]
+    u2_data = data.loc[data['customer_id']==user2]
 
-    '''sum up the squares of preferences of each user'''
-    u1_square_pref_sum = sum((u1_data['star_rating'].tolist() ** 2))
-    u2_square_pref_sum = sum((u2_data['star_rating'].tolist() ** 2))
+    for item in u1_data['product_id']:
+        if item in u2_data['product_id'].unique():
+            both_rated.append(item)
+
+    if len(both_rated)==0:
+        return 0
+    
+    #u1_data = u1_data['star_rating'][u1_data['product_id'].isin(both_rated)].tolist()
+    #u2_data = u2_data['star_rating'][u2_data['product_id'].isin(both_rated)].tolist()
+    
+    u1_data = [1, 2,6]
+    u2_data = [1, 3, 4]
+    
+    cosine_similarity = 1 - spatial.distance.cosine(u1_data, u2_data)
+    
+    return cosine_similarity
+    
+     
+
+
+
+for a in df['customer_id']:
+    for b in df['customer_id']:
+        print(cosine_similarity(a, b, df))
+        print(pearson_similarity(a, b, df))
+
