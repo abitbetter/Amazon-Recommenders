@@ -80,22 +80,18 @@ def pearson_similarity(user1, user2, data):
 
     if len(both_rated)==0:
         return 0
-    
-    #u1_data = u1_data['star_rating'][u1_data['product_id'].isin(both_rated)].tolist()
-    #u2_data = u2_data['star_rating'][u2_data['product_id'].isin(both_rated)].tolist()
-    
-    u1_data = [1, 2,6]
-    u2_data = [1, 3, 4]
-    
+
+    u1_data = u1_data['star_rating'][u1_data['product_id'].isin(both_rated)].tolist()
+    u2_data = u2_data['star_rating'][u2_data['product_id'].isin(both_rated)].tolist()
+
     pearson_corr = scipy.stats.pearsonr(u1_data, u2_data)
-    
+
     return pearson_corr
 
+
 def cosine_similarity(user1, user2, data):
-    
     both_rated = []
-    
-    
+
     u1_data = data.loc[data['customer_id']==user1]
     u2_data = data.loc[data['customer_id']==user2]
 
@@ -105,23 +101,15 @@ def cosine_similarity(user1, user2, data):
 
     if len(both_rated)==0:
         return 0
-    
-    #u1_data = u1_data['star_rating'][u1_data['product_id'].isin(both_rated)].tolist()
-    #u2_data = u2_data['star_rating'][u2_data['product_id'].isin(both_rated)].tolist()
-    
-    u1_data = [1, 2,6]
-    u2_data = [1, 3, 4]
-    
+
+    u1_data = u1_data['star_rating'][u1_data['product_id'].isin(both_rated)].tolist()
+    u2_data = u2_data['star_rating'][u2_data['product_id'].isin(both_rated)].tolist()
+
     cosine_similarity = 1 - spatial.distance.cosine(u1_data, u2_data)
-    
+
     return cosine_similarity
-    
-     
-
-
 
 for a in df['customer_id']:
     for b in df['customer_id']:
         print(cosine_similarity(a, b, df))
         print(pearson_similarity(a, b, df))
-
