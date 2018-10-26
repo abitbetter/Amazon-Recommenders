@@ -31,6 +31,7 @@ class HomeView(TemplateView):
 	def post(self,request):
 		form = HomeForm(request.POST)
 		if form.is_valid():
+			form.save()
 			text = form.cleaned_data['post']
 		form = HomeForm()
 		args = {'form': form, 'text': text}
