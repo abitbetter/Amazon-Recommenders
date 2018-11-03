@@ -119,7 +119,7 @@ def cosine_similarity(user1, user2, data):
     return cosine_similarity
 
 
-def final_function(user, data, dictionary):
+def user_user_collab(user, data, dictionary):
     dictionary['customers'].append(user)
     dictionary['top_1'].append('')
     dictionary['top_1_pearson'].append(-1)
@@ -139,7 +139,7 @@ def final_function(user, data, dictionary):
 def main():
     dict = {'customers':[], 'top_1':[], 'top_1_pearson':[]}
     for x in df['customer_id']:
-        a = final_function(x, df, dict)
+        a = user_user_collab(x, df, dict)
 
     dataframe = pd.DataFrame.from_dict(a, orient='columns')
     return dataframe
