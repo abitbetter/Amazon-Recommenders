@@ -1,3 +1,4 @@
+import collections
 import pandas as pd
 import surprise
 import sqlite3 as sq
@@ -16,7 +17,7 @@ def import_data(db_path):
                     star_rating
                 FROM books
                 WHERE LENGTH(STAR_RATING) < 2
-                LIMIT 100000''', conn)
+                LIMIT 1000''', conn)
 
     df['star_rating'] = df['star_rating'].astype(float)
     df['star_rating'] = df['star_rating'].astype(int) #convert rating to integer type
@@ -43,8 +44,8 @@ reader = Reader(rating_scale=(1, 5))
 data = Dataset.load_from_df(df[['userID', 'itemID', 'rating']], reader)
 
 
-from surprise import KNNBasic, SVD
-from surprise import NMF, model_selection
+#from surprise import KNNBasic, SVD
+#from surprise import NMF, model_selection
 
 #KNN   - NOT WORKING --TOO MEMORY INTENSIVE
 #algo = KNNBasic()
@@ -52,12 +53,58 @@ from surprise import NMF, model_selection
 
 
 # svd
-algo = SVD()
-model_selection.cross_validate(algo, data, measures=['RMSE'], cv=5, verbose=True)
+#algo = SVD()
+#model_selection.cross_validate(algo, data, measures=['RMSE'], cv=5, verbose=True)
 
 # nmf
-algo = NMF()
-model_selection.cross_validate(algo, data, measures=['RMSE'], cv=5, verbose=True)
+#algo = NMF()
+#model_selection.cross_validate(algo, data, measures=['RMSE'], cv=5, verbose=True)
 
 
 
+from collections import defaultdict
+
+from surprise import SVD
+
+
+
+def get_top_n(predictions, n=10):
+    '''Return the top-N recommendation for each user from a set of predictions.
+
+    Args:
+        predictions(list of Prediction objects): The list of predictions, as
+            returned by the test method of an algorithm.
+        n(int): The number of recommendation to output for each user. Default
+            is 10
+    Returns:
+    A dict where keys are user (raw) ids and values are lists of tuples:
+        [(raw item id, rating estimation), ...] of size n.
+    '''
+
+    # First map the predictions to each user.
+    top_n = defaultdict(list)
+    for userID, itemID, true_r, est, _ in predictions:
+        top_n[userID].append((itemID, est))
+
+    # Then sort the predictions for each user and retrieve the k highest ones.
+    for userID, rating in top_n.items():
+        rating.sort(key=lambda x: x[1], reverse=True)
+        top_n[userID] = rating[:n]
+
+    return top_n
+
+
+# First train an SVD algorithm on the dataset.
+trainset = data.build_full_trainset()
+algo = SVD()
+algo.fit(trainset)
+
+# Than predict ratings for all pairs (u, i) that are NOT in the training set.
+testset = trainset.build_anti_testset()
+predictions = algo.test(testset)
+
+top_n = get_top_n(predictions, n=10)
+
+# Print the recommended items for each user
+for userID, rating in top_n.items():
+    print(userID, [itemID for (itemID, _) in rating])
