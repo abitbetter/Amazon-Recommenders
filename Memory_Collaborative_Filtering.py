@@ -12,42 +12,91 @@ from math import sqrt
 from scipy import stats, spatial
 from scipy.sparse import csr_matrix
 
-path = 'C:/users/arjun/Desktop/amazon.db'
-
 #TO-DO: SHOULD I ONLY DO THIS WITH USERS WITH OVER A CERTAIN AMOUNT OF RATINGS?
 
-def import_data(db_path):
+def import_standard_data(db_path):
     conn = sq.connect(db_path) #sqliteDB path goes in parantheses
     crsr = conn.cursor()
 
     df = pd.read_sql_query('''
                 SELECT DISTINCT
-                    X.customer_id,
-                    X.product_id,
-                    X.star_rating,
-                    X.PRODUCTS_REVIEWED
+                      A.customer_id,
+                      A.product_id,
+                      A.product_title,
+                      A.review_body,
+                      A.STAR_RATING
                 FROM
-                    (SELECT
-                        customer_id,
-                        product_id,
-                        star_rating,
-                        COUNT(product_id) AS products_reviewed
-                    FROM
-                        amazon_music_reviews
-                    GROUP BY
-                        customer_id,
-                        product_id,
-                        star_rating) X
+                    amazon_books_reviews A
+                    JOIN
+                    Product_Frequency_Rankings B ON B.product_id = A.product_id
+                    JOIN
+                    User_Frequency_Rankings C ON C.customer_id = A.customer_id
                 WHERE LENGTH(STAR_RATING) < 2
-                AND   X.PRODUCTS_REVIEWED > 20
+                AND   B.COUNTS >= 58
+                AND   C.COUNTS > 32
                 ''', conn)
 
-    df['star_rating'] = df['star_rating'].astype(float)
-    df['star_rating'] = df['star_rating'].astype(int) #convert rating to integer type
-    df = df.reset_index()
+    df = df.reset_index(drop=True)
     return df
 
-df = import_data(path)
+def retrieve_user_counts(db_path):
+        conn = sq.connect(db_path) #sqliteDB path goes in parantheses
+        crsr = conn.cursor()
+
+        df = pd.read_sql_query('''
+                    SELECT DISTINCT
+                          A.customer_id,
+                          COUNT(A.STAR_RATING)
+                    FROM
+                        amazon_books_reviews A
+                    GROUP BY A.customer_id
+                    ''', conn)
+        return df
+
+def retrieve_product_counts(db_path):
+        conn = sq.connect(db_path) #sqliteDB path goes in parantheses
+        crsr = conn.cursor()
+
+        df = pd.read_sql_query('''
+                    SELECT DISTINCT
+                          A.product_id,
+                          COUNT(A.STAR_RATING)
+                    FROM
+                        amazon_books_reviews A
+                    GROUP BY A.product_id
+                    ''', conn)
+        return df
+
+
+def import_product_frequency_data(db_path):
+    conn = sq.connect(db_path) #sqliteDB path goes in parantheses
+    crsr = conn.cursor()
+
+    df = pd.read_sql_query('''
+                SELECT DISTINCT
+                      Z.product_id,
+                      Z.counts
+                FROM
+                    Product_Frequency_Rankings Z
+                ''', conn)
+
+    df = df.reset_index(drop=True)
+    return df
+
+def import_user_frequency_data(db_path):
+    conn = sq.connect(db_path) #sqliteDB path goes in parantheses
+    crsr = conn.cursor()
+
+    df = pd.read_sql_query('''
+                SELECT DISTINCT
+                      Z.customer_id,
+                      Z.counts
+                FROM
+                    User_Frequency_Rankings Z
+                ''', conn)
+
+    df = df.reset_index(drop=True)
+    return df
 
 def euclidean_similarity(user1, user2, data):
     #instead of storing data in both_rated why not just use counter, if it is just a flag for
@@ -59,8 +108,7 @@ def euclidean_similarity(user1, user2, data):
     for item in u1_data['product_id']:
         if item in u2_data['product_id'].unique():
             both_rated[item]=1
-
-    if len(both_rated)<=1:  #work this into distance formula to account for volume
+    if len(both_rated)<1:  #work this into distance formula to account for volume
         return 0
 
     euclidean_distance = []
@@ -74,9 +122,7 @@ def euclidean_similarity(user1, user2, data):
 
     sum_of_euclidean_distance = sum(euclidean_distance)
     inverted_euclidean_distance = 1/(1+sqrt(sum_of_euclidean_distance))
-    return user1, user2, inverted_euclidean_distance
-
-
+    return inverted_euclidean_distance
 
 def pearson_similarity(user1, user2, data):
     #instead of storing data in both_rated why not just use counter, if it is just a flag for
@@ -89,7 +135,7 @@ def pearson_similarity(user1, user2, data):
         if item in u2_data['product_id'].unique():
             both_rated.append(item)
 
-    if len(both_rated)<=1:
+    if len(both_rated)<1:
         return 0
 
     u1_data = u1_data['star_rating'][u1_data['product_id'].isin(both_rated)].tolist()
@@ -109,7 +155,7 @@ def cosine_similarity(user1, user2, data):
         if item in u2_data['product_id'].unique():
             both_rated.append(item)
 
-    if len(both_rated)<=1:
+    if len(both_rated)<1:
         return 0
 
     u1_data = u1_data['star_rating'][u1_data['product_id'].isin(both_rated)].tolist()
@@ -122,29 +168,29 @@ def cosine_similarity(user1, user2, data):
 def user_user_collab(user, data, dictionary):
     dictionary['customers'].append(user)
     dictionary['top_1'].append('')
-    dictionary['top_1_pearson'].append(-1)
+    dictionary['top_1_euclidean'].append(0)
 
     user_set = data['customer_id'].tolist()
     for x in user_set:
-        pearson_corr = cosine_similarity(user, x, data)
-        print(dictionary['top_1_pearson'][-1])
-        if pearson_corr >= dictionary['top_1_pearson'][-1]:
+        check_set = set(dictionary['customers'])
+        print(check_set)
+        if x==user or x in check_set:
+            continue
+        elif x != user:
+            print(x)
+            euclidean_distance = euclidean_similarity(user, x, data)
+        if euclidean_distance >= dictionary['top_1_euclidean'][-1]:
             dictionary['top_1'][-1]=x
-            dictionary['top_1_pearson'][-1]=pearson_corr
+            dictionary['top_1_euclidean'][-1]=euclidean_distance
         else:
-            pass
+            continue
     return dictionary
 
 
-def main():
-    dict = {'customers':[], 'top_1':[], 'top_1_pearson':[]}
+def main(df):
+    dict = {'customers':[], 'top_1':[], 'top_1_euclidean':[]}
     for x in df['customer_id']:
         a = user_user_collab(x, df, dict)
 
     dataframe = pd.DataFrame.from_dict(a, orient='columns')
     return dataframe
-
-
-
-dataframe = main()
-print(dataframe.head(25))
