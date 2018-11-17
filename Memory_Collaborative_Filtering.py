@@ -4,6 +4,8 @@ Created on Mon Oct 22 19:21:14 2018
 
 @author: arjun
 """
+#HAVING!!!!
+
 
 import pandas as pd
 import numpy as np
@@ -49,7 +51,8 @@ def retrieve_user_counts(db_path):
                           COUNT(A.STAR_RATING)
                     FROM
                         amazon_books_reviews A
-                    GROUP BY A.customer_id
+                    GROUP BY
+                        A.customer_id
                     ''', conn)
         return df
 
