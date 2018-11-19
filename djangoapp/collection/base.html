@@ -1,0 +1,75 @@
+{% load staticfiles %}
+<!doctype html>
+<html>
+<head>
+	<title>
+		{% block title %}
+			Amazon Product Recommendations
+		{% endblock title %}
+	</title>
+	<link rel="stylesheet" href="{% static 'css/style.css' %}" />
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous"/>
+	{% block header %}{% endblock header %}
+</head>
+<body>
+		{% block content %}
+		<div id="navbar">
+			<nav class="navbar navbar-expand-lg navbar-light bg-primary">
+			  <a class="navbar-white bg-primary text-white" href="#">Fish Facebook</a>
+			  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+			    <span class="navbar-toggler-icon"></span>
+			  </button>
+			  <div class="navbar navbar-dark bg-primary" id="navbarNav">
+			    <ul class="navbar-nav">
+			      <li class="nav-item active">
+			        <a class="nav-link" href="{% url 'home' %}"">Home <span class="sr-only">(current)</span></a>
+			      </li>
+			      <li class="nav-item active">
+			        <a class="nav-link" href="{% url 'github' %}">GitHub</a>
+			      </li>
+			      <li class="nav-item active">
+			        <a class="nav-link" href="{% url 'contact' %}">Contact</a>
+			      </li>
+			    </ul>
+			  </div>
+			</nav>
+		</div>
+<div id="container">
+
+			<div id="intro">
+				<h2>Instructions</h2>
+					<p>This is where we will provide basic instructions for the app and explain what each section is</p>
+			</div>
+
+			<div id="main">
+				<h2>Recommended Products</h2>
+					<p>This is where we will enter in the customer ID and click a button to run our algorithm, take us to the results page</p>
+					<div id="form">
+						<form method="model_type">
+							{% csrf_token %}
+							{{ form.model_type }}
+						<form method="post">
+							{% csrf_token %}
+							{{ form.post }}
+					</div>
+						<div id="button">
+							<button type="button" class="btn btn-outline-primary">Search</button>
+						</div>
+					</form>
+						<h2>
+							{%for title in titles%}
+								{{ title.product_title }}
+							{% endfor %}
+						</h2>
+			</div>
+
+	</div>
+
+	{% endblock content %}
+	{% block footer %}
+		<div id="footer">
+			<h4>Copyright &copy; 2018 Fish Facebook, LLC</h4>
+		</div>
+	{% endblock footer %}
+</body>
+</html>
