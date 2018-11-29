@@ -26,7 +26,8 @@ def import_standard_data(db_path):
                       A.product_id,
                       A.product_title,
                       A.review_body,
-                      A.STAR_RATING
+                      A.STAR_RATING,
+                      A.helpful_votes
                 FROM
                     amazon_books_reviews A
                     JOIN
@@ -100,6 +101,9 @@ def import_user_frequency_data(db_path):
 
     df = df.reset_index(drop=True)
     return df
+
+
+
 
 def euclidean_similarity(user1, user2, data):
     #instead of storing data in both_rated why not just use counter, if it is just a flag for
