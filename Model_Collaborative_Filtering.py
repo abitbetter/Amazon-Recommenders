@@ -96,6 +96,7 @@ def get_top_n(predictions, n=10):
 
 # First train an SVD algorithm on the dataset.
 trainset = data.build_full_trainset()
+trainset.split(n_folds=3)
 algo = SVD()
 algo.fit(trainset)
 
