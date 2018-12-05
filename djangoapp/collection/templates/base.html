@@ -44,6 +44,9 @@
 			<div id="main">
 				<h2>Recommended Products</h2>
 					<p>This is where we will enter in the customer ID and click a button to run our algorithm, take us to the results page</p>
+					<div id="radio">
+						{{ form.model_type }}
+					</div>
 					<div id="form">
 						<form method="post">
 							{% csrf_token %}
