@@ -1,6 +1,7 @@
 CREATE TABLE trunc_books AS SELECT
     customer_id,
     product_id,
+    product_title,
     product_parent,
     star_rating,
     helpful_votes,
