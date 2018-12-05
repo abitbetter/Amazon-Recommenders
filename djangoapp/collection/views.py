@@ -33,6 +33,8 @@ class HomeView(TemplateView):
 
 	def post(self,request):
 		form = HomeForm(request.POST)
+		text = request.POST.get('model_type')
+		print(text)
 		if form.is_valid():
 			form.save()
 			input = form.cleaned_data['post']
