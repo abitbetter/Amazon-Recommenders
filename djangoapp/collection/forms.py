@@ -19,9 +19,8 @@ class HomeForm(forms.ModelForm):
         }
     ))
 
-    model_type = forms.ChoiceField(required = True, choices=MODEL_CHOICES, widget=forms.RadioSelect)
-    #model_type = forms.CharField(label="Please select model type", widget=forms.RadioSelect(choices=MODEL_CHOICES))
+    model_type = forms.ChoiceField(required = False, choices=MODEL_CHOICES, widget=forms.RadioSelect)
 
     class Meta:
         model = Post
-        fields = ('post','model_type')
+        fields = ('post', 'model_type')

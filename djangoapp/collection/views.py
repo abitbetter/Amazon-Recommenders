@@ -32,12 +32,14 @@ class HomeView(TemplateView):
 		 return render(request, self.template_name, {'form': form})
 
 	def post(self,request):
+		#select = SelectionForm()
 		form = HomeForm(request.POST)
-		text = request.POST.get('model_type')
-		print(text)
+
 		if form.is_valid():
 			form.save()
 			input = form.cleaned_data['post']
+			text = form.cleaned_data['model_type']
+			print(text)
 			#text = get_queryset(Books.objects.only("product_title").value.filter(index=input).using('reviews'))
 			titles = Books.objects.only("product_title").filter(index=input).using('reviews')
 		form = HomeForm()

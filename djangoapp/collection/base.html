@@ -44,13 +44,10 @@
 			<div id="main">
 				<h2>Recommended Products</h2>
 					<p>This is where we will enter in the customer ID and click a button to run our algorithm, take us to the results page</p>
+				<form method="post">
 					<div id="form">
-						<form method="model_type">
-							{% csrf_token %}
-							{{ form.model_type }}
-						<form method="post">
-							{% csrf_token %}
-							{{ form.post }}
+						{% csrf_token %}
+						{{ form.as_p }}
 					</div>
 						<div id="button">
 							<button type="button" class="btn btn-outline-primary">Search</button>
