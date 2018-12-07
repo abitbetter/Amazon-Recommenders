@@ -6,6 +6,7 @@ from collection.modelsfile import Movies
 from django.views.generic import TemplateView
 from collection.forms import HomeForm
 from collection.dbrouter import MultiDBModelAdmin
+from collection.Unpickle import unpickle, get_index_from_name, print_similar_books
 
 # Create your views here.
 def index(request):
@@ -35,11 +36,16 @@ class HomeView(TemplateView):
 		form = HomeForm(request.POST)
 		if form.is_valid():
 			form.save()
+			#book title input
 			input = form.cleaned_data['post']
+			#model type to run
 			selection = form.cleaned_data['model_type']
-			print(selection)
+			#unpickle KNN model
+			clf = unpickle()
+			print(clf.type())
+			recommendations = print_similar_books()
 			#text = get_queryset(Books.objects.only("product_title").value.filter(index=input).using('reviews'))
-			titles = Books.objects.only("product_title").filter(index=input).using('reviews')
+			titles = Books.objects.only("product_id").filter(product_title=input).using('reviews')
 		form = HomeForm()
 		args = {'form': form, 'titles': titles}
 		return render(request, self.template_name, args)
