@@ -4,7 +4,7 @@ from collection.models import Post
 
 MODEL_CHOICES= [
     ('knn', 'K Nearest Neighbor'),
-    ('second', 'Second Model'),
+    ('svd', 'SVD'),
     ('third', 'Third Model'),
     ('fourth', 'Fourth Model' ),
 ]

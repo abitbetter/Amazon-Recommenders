@@ -43,7 +43,7 @@
 
 			<div id="main">
 				<h2>Recommended Products</h2>
-					<p>This is where we will enter in the customer ID and click a button to run our algorithm, take us to the results page</p>
+					<p>Please select a model type from the options listed below and enter a Product ID to produce recommendations!</p>
 					<form method="post">
 					<div id="form">
 							{% csrf_token %}
@@ -51,7 +51,7 @@
 							{{ form.post }}
 					</div>
 						<div id="button">
-							<button type="button" class="btn btn-outline-primary">Search</button>
+							<button type="button" class="btn btn-outline-primary" onclick="location.href='{% url 'results' %}'"">Search</button>
 						</div>
 					</form>
 						<h2>
