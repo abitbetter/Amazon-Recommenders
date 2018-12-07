@@ -15,11 +15,11 @@ class HomeForm(forms.ModelForm):
             'id': 'formGroupExampleInput',
             'class': 'form-control',
             'type': 'text',
-            'placeholder': 'Enter Product ID...',
+            'placeholder': 'Enter Book Title...',
         }
     ))
 
-    model_type = forms.ChoiceField(required = False, choices=MODEL_CHOICES, widget=forms.RadioSelect)
+    model_type = forms.ChoiceField(required = True, choices=MODEL_CHOICES, widget=forms.RadioSelect)
 
     class Meta:
         model = Post
