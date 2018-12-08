@@ -16,18 +16,16 @@ def get_index_from_name(name, review_data):
 def print_similar_books(review_data,query=None,id=None, model=None):
     conn = sql.connect(review_data)
     #replace this with a query
-    df = pd.read_sql(review_data,conn)
-    return print(len(df))
+    df = pd.read_sql("SELECT * FROM wrangled_books", conn)
 
-print_similar_books(wrangled_data)
+    distances2, indices2 = model.kneighbors()
+    if id:
+        for id in indices2[id][1:]:
+            print(review_data.iloc[id]["product_title"])
+    if query:
+        found_id = get_index_from_name(query, df)
+        for id in indices2[found_id][1:]:
+            return print(review_data.iloc[id]["product_title"])
 
-
-    #
-    # distances2, indices2 = model.kneighbors()
-    # if id:
-    #     for id in indices2[id][1:]:
-    #         print(review_data.iloc[id]["product_title"])
-    # if query:
-    #     found_id = get_index_from_name(query, review_data)
-    #     for id in indices2[found_id][1:]:
-    #         print(review_data.iloc[id]["product_title"])
+#model = unpickle()
+#print_similar_books(wrangled_data, query=1984, model=model)
