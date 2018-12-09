@@ -2,7 +2,19 @@
 {% block title %}
 	Results - {{ block.super }}
 {% endblock title %}
+
 {% block content %}
-	<h1>Results page</h1>
-	<p>This is where results go.</p>
+	<div id="container">
+
+
+		<h2>
+			{%for result in results%}
+				{{ result.product_title }}
+			{% endfor %}
+		</h2>
+
+
+
+
+	</div>
 {% endblock content %}

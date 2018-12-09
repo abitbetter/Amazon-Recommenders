@@ -33,19 +33,29 @@ class HomeView(TemplateView):
 		 return render(request, self.template_name, {'form': form})
 
 	def post(self,request):
-		form = HomeForm(request.POST)
-		if form.is_valid():
-			form.save()
-			#book title input
-			input = form.cleaned_data['post']
-			#model type to run
-			selection = form.cleaned_data['model_type']
-			#unpickle KNN model
-			clf = unpickle()
-			print(clf.type())
-			recommendations = print_similar_books()
-			#text = get_queryset(Books.objects.only("product_title").value.filter(index=input).using('reviews'))
-			titles = Books.objects.only("product_id").filter(product_title=input).using('reviews')
-		form = HomeForm()
-		args = {'form': form, 'titles': titles}
-		return render(request, self.template_name, args)
+		if request.method == "POST":
+			template_name = 'results.html'
+			form = HomeForm(request.POST)
+			if form.is_valid():
+				form.save()
+				#book title input
+				input = form.cleaned_data['post']
+				#model type to run
+				#selection = form.cleaned_data['model_type']
+
+				#unpickle KNN model
+				# clf = unpickle()
+				# if request.POST.get('knnbutton'):
+				# 	results = print_similar_books()
+				# elif request.POST.get('svdbutton'):
+				# 	# results = predictSVD()
+				# elif request.POST.get('otherbutton'):
+				# 	# results = predictOther()
+
+
+				results = Books.objects.only("product_title").filter(index=input).using('reviews')
+				for result in results:
+					print(result.product_title)
+			form = HomeForm()
+			args = {'form': form, 'results': results}
+			return render(request, self.template_name, args)

@@ -2,71 +2,65 @@
 <!doctype html>
 <html>
 <head>
-	<title>
-		{% block title %}
-			Amazon Product Recommendations
-		{% endblock title %}
-	</title>
-	<link rel="stylesheet" href="{% static 'css/style.css' %}" />
-	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous"/>
-	{% block header %}
+<title>
+	{% block title %}
+		Amazon Product Recommendations
+	{% endblock title %}
+</title>
+<link rel="stylesheet" href="{% static 'css/style.css' %}" />
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous"/>
+{% block header %}
 
-	<div id="navbar">
-		<nav class="navbar navbar-expand-lg navbar-light bg-primary">
-			<a class="navbar-white bg-primary text-white" href="#">Fish Facebook</a>
-			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-				<span class="navbar-toggler-icon"></span>
-			</button>
-			<div class="navbar navbar-dark bg-primary" id="navbarNav">
-				<ul class="navbar-nav">
-					<li class="nav-item active">
-						<a class="nav-link" href="{% url 'home' %}"">Home <span class="sr-only">(current)</span></a>
-					</li>
-					<li class="nav-item active">
-						<a class="nav-link" href="{% url 'github' %}">GitHub</a>
-					</li>
-					<li class="nav-item active">
-						<a class="nav-link" href="{% url 'contact' %}">Contact</a>
-					</li>
-				</ul>
-			</div>
-		</nav>
-	</div>
+<div id="navbar">
+	<nav class="navbar navbar-expand-lg navbar-light bg-primary">
+		<a class="navbar-white bg-primary text-white" href="#">Amazon Book Recommendations</a>
+		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+			<span class="navbar-toggler-icon"></span>
+		</button>
+		<div class="navbar navbar-dark bg-primary" id="navbarNav">
+			<ul class="navbar-nav">
+				<li class="nav-item active">
+					<a class="nav-link" href="{% url 'home' %}">Home<span class="sr-only">(current)</span></a>
+				</li>
+				<li class="nav-item active">
+					<a class="nav-link" href="{% url 'github' %}">GitHub</a>
+				</li>
+				<li class="nav-item active">
+					<a class="nav-link" href="{% url 'contact' %}">Contact</a>
+				</li>
+			</ul>
+		</div>
+	</nav>
+</div>
 
-	{% endblock header %}
+{% endblock header %}
 </head>
 <body>
-		{% block content %}
+{% block content %}
 
 <div id="container">
-
-			<div id="main">
-				<h2>Amazon Book Recommendations</h2>
-					<p>Please select a model type from the options listed below and enter a Product ID to produce recommendations!</p>
-					<form method="post">
-					<div id="form">
-							{% csrf_token %}
-							{{ form.model_type }}
-							{{ form.post }}
-					</div>
-						<div id="button">
-							<button type="button" class="btn btn-outline-primary" onclick="location.href='{% url 'results' %}'"">Search</button>
-						</div>
-					</form>
-						<h2>
-							{%for title in titles%}
-								{{ title.product_id }}
-							{% endfor %}
-						</h2>
-			</div>
-
+	<div id"main">
+			<h2>Book Recommendations</h2>
+				<p>Please enter a book title and select a model to see book recommendations!</p>
+			<form id="recform" method="post">
+				<div id= "submit">
+					{% csrf_token %}
+					{{ form.post }}
+				</div>
+				<div id="buttongroup">
+						<button id="knnbutton" type="button" class="btn btn-outline-primary" name="knn" onclick="location.href='{% url 'results' %}'"">K-Nearest Neighbors</button>
+						<button id="svdbutton" type="button" class="btn btn-outline-primary" name="svd" onclick="location.href='{% url 'results' %}'"">SVD</button>
+						<button id="otherbutton" type="button" class="btn btn-outline-primary" name="other" onclick="location.href='{% url 'results' %}'"">Other</button>
+				</div>
+		</form>
 	</div>
 
-	{% endblock content %}
-	{% block footer %}
-		<div id="footer">
-			<h4>Copyright &copy; 2018 Fish Facebook, LLC</h4>
-		</div>
-	{% endblock footer %}
+{% endblock content %}
+{% block footer %}
+	<div id="footer">
+		<h4>Copyright &copy; 2018 Fish Facebook, LLC</h4>
+	</div>
+{% endblock footer %}
+</div>
 </body>
 </html>
