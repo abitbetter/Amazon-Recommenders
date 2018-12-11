@@ -6,6 +6,7 @@ from collection.modelsfile import Movies
 from django.views.generic import TemplateView
 from collection.forms import HomeForm
 from collection.dbrouter import MultiDBModelAdmin
+from collection.Unpickle import unpickle, get_index_from_name, print_similar_books, open_data, wrangled_data
 
 # Create your views here.
 def index(request):
@@ -14,8 +15,23 @@ def index(request):
 		'results' : results,
 	})
 
-def results(request):
-	return render(request,'results.html')
+class ResultsView(TemplateView):
+	template_name = "results.html"
+
+	def get(self, request):
+		template_name = 'results.html'
+		form = HomeForm(request.GET)
+		if form.is_valid():
+			form.save()
+			input = form.cleaned_data['post']
+			df = open_data(wrangled_data)
+			if request.GET.get('knn'):
+				model = unpickle()
+				results = print_similar_books(df, query=input, model=model)
+
+			#results = Books.objects.only("product_title").filter(index=input).using('reviews')
+			args = {'results': results}
+		return render(request, template_name, args)
 
 def result_detail(request, slug):
 	#grab the object
@@ -25,21 +41,44 @@ def result_detail(request, slug):
 		'result': result,
 	})
 
+# def getResults(request, input):
+# 	template_name = 'results.html'
+# 	#unpickle knn models
+# 	#clf = unpickle()
+# 	#results = print_similar_books()
+# 	results = Books.objects.only("product_title").filter(index=input).using('reviews')
+# 	args = {'results': results}
+# 	return render(request, template_name, args )
+
 class HomeView(TemplateView):
 	template_name = 'base.html'
 	def get(self,request):
-		 form = HomeForm()
-		 return render(request, self.template_name, {'form': form})
+		form = HomeForm()
+		return render(request, self.template_name, {'form': form})
 
 	def post(self,request):
-		form = HomeForm(request.POST)
-		text = request.POST.get('model_type')
-		print(text)
-		if form.is_valid():
-			form.save()
-			input = form.cleaned_data['post']
-			#text = get_queryset(Books.objects.only("product_title").value.filter(index=input).using('reviews'))
-			titles = Books.objects.only("product_title").filter(index=input).using('reviews')
-		form = HomeForm()
-		args = {'form': form, 'titles': titles}
-		return render(request, self.template_name, args)
+		if request.method == "POST":
+			template_name = 'results.html'
+			form = HomeForm(request.POST)
+			if form.is_valid():
+				form.save()
+				#book title input
+				input = form.cleaned_data['post']
+				#model type to run
+				#selection = form.cleaned_data['model_type']
+
+				#unpickle KNN model
+				# clf = unpickle()
+				# if request.POST.get('knnbutton'):
+				# 	results = print_similar_books()
+				# elif request.POST.get('svdbutton'):
+				# 	# results = predictSVD()
+				# elif request.POST.get('otherbutton'):
+				# 	# results = predictOther()
+
+				results = Books.objects.only("product_title").filter(index=input).using('reviews')
+				for result in results:
+					print(result.product_title)
+			form = HomeForm()
+			args = {'form': form, 'results': results}
+			return render(request, self.template_name, args)

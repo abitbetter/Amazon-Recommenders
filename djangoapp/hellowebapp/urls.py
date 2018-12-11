@@ -22,8 +22,10 @@ from django.contrib import admin
 #Django's generic view
 from django.views.generic import TemplateView
 from collection import views
-from collection.views import HomeView
+from collection.views import HomeView, ResultsView
 from django.views.generic.base import RedirectView
+
+from collection.modelsfile import Books
 
 #from django.conf.urls import path
 
@@ -35,9 +37,9 @@ urlpatterns = [
     path('contact/',
         TemplateView.as_view(template_name='contact.html'),
         name='contact'),
-    path('results/',views.results,name='results'),
-    path('results/<slug>/', views.result_detail,
-        name='result_detail'),
+    path('results/',ResultsView.as_view(), name='results'),
+    # path('results/<slug>/', views.result_detail,
+    #     name='result_detail'),
     path('admin/', admin.site.urls),
     path('github/',RedirectView.as_view(url='https://github.com/georgetown-analytics/Amazon-Recommenders'),
         name='github'),

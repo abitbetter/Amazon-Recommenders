@@ -10,5 +10,4 @@ class Results(models.Model):
 
 class Post(models.Model):
     post = models.CharField(max_length=500)
-    model_type = forms.ChoiceField(widget=forms.RadioSelect)
-    #user - models.ForeignKey(User)
+    #model_type = forms.ChoiceField(widget=forms.RadioSelect)

@@ -7,7 +7,6 @@
 # Feel free to rename the models, but don't rename db_table values or field names.
 from django.db import models
 
-
 class Books(models.Model):
     index = models.IntegerField(primary_key=True, blank=False, null=False)
     marketplace = models.TextField(blank=True, null=True)

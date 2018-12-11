@@ -4,7 +4,7 @@ from collection.models import Post
 
 MODEL_CHOICES= [
     ('knn', 'K Nearest Neighbor'),
-    ('second', 'Second Model'),
+    ('svd', 'SVD'),
     ('third', 'Third Model'),
     ('fourth', 'Fourth Model' ),
 ]
@@ -15,13 +15,12 @@ class HomeForm(forms.ModelForm):
             'id': 'formGroupExampleInput',
             'class': 'form-control',
             'type': 'text',
-            'placeholder': 'Enter Product ID...',
+            'placeholder': 'Enter Book Title...',
         }
     ))
 
-    model_type = forms.ChoiceField(required = True, choices=MODEL_CHOICES, widget=forms.RadioSelect)
-    #model_type = forms.CharField(label="Please select model type", widget=forms.RadioSelect(choices=MODEL_CHOICES))
+    #model_type = forms.ChoiceField(required = True, choices=MODEL_CHOICES, widget=forms.RadioSelect)
 
     class Meta:
         model = Post
-        fields = ('post','model_type')
+        fields = ('post',)
