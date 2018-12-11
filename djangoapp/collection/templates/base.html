@@ -42,15 +42,15 @@
 	<div id"main">
 			<h2>Book Recommendations</h2>
 				<p>Please enter a book title and select a model to see book recommendations!</p>
-			<form id="recform" method="post">
+			<form id="recform" action='/results/' method="GET">
 				<div id= "submit">
 					{% csrf_token %}
 					{{ form.post }}
 				</div>
 				<div id="buttongroup">
-						<button id="knnbutton" type="button" class="btn btn-outline-primary" name="knn" onclick="location.href='{% url 'results' %}'"">K-Nearest Neighbors</button>
-						<button id="svdbutton" type="button" class="btn btn-outline-primary" name="svd" onclick="location.href='{% url 'results' %}'"">SVD</button>
-						<button id="otherbutton" type="button" class="btn btn-outline-primary" name="other" onclick="location.href='{% url 'results' %}'"">Other</button>
+						<button id="knnbutton" type="submit" class="btn btn-outline-primary" name="knn" value="Click">K-Nearest Neighbors</button>
+						<button id="svdbutton" type="submit" class="btn btn-outline-primary" name="svd" value="Click">SVD</button>
+						<button id="otherbutton" type="submit" class="btn btn-outline-primary" name="other" value="Click">Other</button>
 				</div>
 		</form>
 	</div>
