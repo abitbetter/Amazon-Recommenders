@@ -2,6 +2,8 @@ from django.shortcuts import render
 from collection.models import Results
 from collection.modelsfile import Books
 from collection.modelsfile import Movies
+from django_tables2 import RequestConfig
+from collection.tables import ResultsTable
 
 from django.views.generic import TemplateView
 from collection.forms import HomeForm
@@ -26,9 +28,12 @@ class ResultsView(TemplateView):
 			input = form.cleaned_data['post']
 			df = open_data(wrangled_data)
 			if request.GET.get('knn'):
-				model = unpickle()
-				results = print_similar_books(df, query=input, model=model)
+				#model = unpickle()
+				#results = print_similar_books(df, query=input, model=model)
+				results = {'1': 'Abraham Lincoln: Vampire Hunter', '2': "There's No Place Like Space: All About Our Solar System (Cat in the Hat's Learning Library)", '3': 'And When She Was Good: A Novel', '4': "George Washington's Secret Six: The Spy Ring That Saved the American Revolution"}
 
+				#table = ResultsTable(results)
+				#RequestConfig(request).configure(table)
 			#results = Books.objects.only("product_title").filter(index=input).using('reviews')
 			args = {'results': results}
 		return render(request, template_name, args)

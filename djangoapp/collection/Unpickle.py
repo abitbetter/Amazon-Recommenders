@@ -7,7 +7,7 @@ from sklearn.neighbors import NearestNeighbors
 wrangled_data = "C:/Users/Michael Chesnut/Documents/Georgetown/wrangled_knn_data.db"
 
 def unpickle():
-    file = r"C:/Users/Michael Chesnut/Documents/Georgetown/Amazon-Recommenders/finalized_model.sav"
+    file = "C:/Users/Michael Chesnut/Documents/Georgetown/Amazon-Recommenders/finalized_model.sav"
     clf = pickle.load(open(file, "rb"))
     return clf
 

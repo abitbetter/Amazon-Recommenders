@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+
 {% block title %}
 	Results - {{ block.super }}
 {% endblock title %}
@@ -10,14 +11,22 @@
 			<p>this is where results go</p>
 		</h2>
 
-		<h2>
-
-				{{ results }}
-
-		</h2>
-
-
-
+			<table class="table">
+				<thead>
+					<tr>
+						<th scope="col">#</th>
+						<th scope="col">Book Title</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for k, v in results.items %}
+						<tr>
+							<th scope="row">{{k}}</th>
+							<td>{{v}}</td>
+						</tr>
+					{% endfor %}
+				</tbody>
+			</table>
 
 	</div>
 {% endblock content %}
