@@ -28,14 +28,12 @@ class ResultsView(TemplateView):
 			input = form.cleaned_data['post']
 			df = open_data(wrangled_data)
 			if request.GET.get('knn'):
-				#model = unpickle()
-				#results = print_similar_books(df, query=input, model=model)
-				results = {'1': 'Abraham Lincoln: Vampire Hunter', '2': "There's No Place Like Space: All About Our Solar System (Cat in the Hat's Learning Library)", '3': 'And When She Was Good: A Novel', '4': "George Washington's Secret Six: The Spy Ring That Saved the American Revolution"}
+				model_type = 'K Nearest Neighbors'
+				model = unpickle()
+				results = print_similar_books(df, query=input, model=model)
+				#results = {'1': 'Abraham Lincoln: Vampire Hunter', '2': "There's No Place Like Space: All About Our Solar System (Cat in the Hat's Learning Library)", '3': 'And When She Was Good: A Novel', '4': "George Washington's Secret Six: The Spy Ring That Saved the American Revolution"}
 
-				#table = ResultsTable(results)
-				#RequestConfig(request).configure(table)
-			#results = Books.objects.only("product_title").filter(index=input).using('reviews')
-			args = {'results': results}
+			args = {'results': results, 'input': input, 'model_type': model_type}
 		return render(request, template_name, args)
 
 def result_detail(request, slug):
@@ -46,44 +44,8 @@ def result_detail(request, slug):
 		'result': result,
 	})
 
-# def getResults(request, input):
-# 	template_name = 'results.html'
-# 	#unpickle knn models
-# 	#clf = unpickle()
-# 	#results = print_similar_books()
-# 	results = Books.objects.only("product_title").filter(index=input).using('reviews')
-# 	args = {'results': results}
-# 	return render(request, template_name, args )
-
 class HomeView(TemplateView):
 	template_name = 'base.html'
 	def get(self,request):
 		form = HomeForm()
 		return render(request, self.template_name, {'form': form})
-
-	def post(self,request):
-		if request.method == "POST":
-			template_name = 'results.html'
-			form = HomeForm(request.POST)
-			if form.is_valid():
-				form.save()
-				#book title input
-				input = form.cleaned_data['post']
-				#model type to run
-				#selection = form.cleaned_data['model_type']
-
-				#unpickle KNN model
-				# clf = unpickle()
-				# if request.POST.get('knnbutton'):
-				# 	results = print_similar_books()
-				# elif request.POST.get('svdbutton'):
-				# 	# results = predictSVD()
-				# elif request.POST.get('otherbutton'):
-				# 	# results = predictOther()
-
-				results = Books.objects.only("product_title").filter(index=input).using('reviews')
-				for result in results:
-					print(result.product_title)
-			form = HomeForm()
-			args = {'form': form, 'results': results}
-			return render(request, self.template_name, args)

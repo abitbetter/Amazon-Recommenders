@@ -7,11 +7,13 @@
 {% block content %}
 	<div id="container">
 
-		<h2>
-			<p>this is where results go</p>
-		</h2>
+		<h4>
+			<p>Recommendations for</br>
+				"{{ input }}",</br>
+				using {{ model_type }}:</p>
+		</h4>
 
-			<table class="table">
+			<table id="resultsTable" class="table table-hover table-bordered">
 				<thead>
 					<tr>
 						<th scope="col">#</th>

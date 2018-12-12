@@ -4,10 +4,10 @@ import sqlite3 as sql
 from sklearn.neighbors import NearestNeighbors
 
 #may need to move into function
-wrangled_data = "C:/Users/Michael Chesnut/Documents/Georgetown/wrangled_knn_data.db"
+wrangled_data = "C:/Users/mches/Dropbox/Georgetown Data Science -- Team Amazon/wrangled_knn_data.db"
 
 def unpickle():
-    file = "C:/Users/Michael Chesnut/Documents/Georgetown/Amazon-Recommenders/finalized_model.sav"
+    file = "C:/Users/mches/Documents/App/finalized_model.sav"
     clf = pickle.load(open(file, "rb"))
     return clf
 
