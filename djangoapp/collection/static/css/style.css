@@ -11,6 +11,10 @@ body {
 
 }
 
+#apptitle {
+	text-align: right;
+}
+
 #navbar {
 	text-align: center;
 	float: center;
