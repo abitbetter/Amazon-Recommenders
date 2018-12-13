@@ -52,7 +52,12 @@ def print_recs(book_title, corr, title):
 print_recs(book_title, corr, "The Stand")
 
 #corr.dump("/db/svd_matrix_corrs")
-outfile = "/db/svd_model_output.p"
+outfile = "/db/svd_model_output2.p"
 with open(outfile, 'wb') as pickle_file:
     p.dump(corr, pickle_file)
-    p.dump(book_title, pickle_file)
+
+
+
+outfile2 = "/db/svd_book_titles.p"
+with open(outfile2, 'wb') as pickle2:
+    p.dump(book_title, pickle2)
