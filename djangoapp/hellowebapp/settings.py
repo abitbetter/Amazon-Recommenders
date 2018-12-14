@@ -88,7 +88,11 @@ DATABASES = {
 	'reviews': {
 		'ENGINE': 'django.db.backends.sqlite3',
         'NAME': os.path.join(BASE_DIR, 'amazon_reviews.db'),
-    }
+    },
+	'knn': {
+		'ENGINE': 'django.db.backends.sqlite3',
+		'NAME': '/db/knn_recommendations.db',
+	}
 }
 
 #Password validation
