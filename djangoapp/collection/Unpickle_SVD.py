@@ -28,14 +28,23 @@ def print_recs(book_title, corr, title):
     corrs = np.concatenate((book_title,corr_target),axis=0)
 
     top_5_idx = np.argsort(corr_target)[-6:-1]
-    top_5_values = [book_title[i] for i in top_5_idx]
-    print(top_5_values)
+
+    recs = ()
+    for i in top_5_idx:
+       recs = recs.append(book_title[i])
+    return recs
+
+#top_5_values = [book_title[i] for i in top_5_idx]
+
+
+
+ #   print(top_5_values)
 
 
 #print_recs(book_title, corr, "The Stand")
 
 
-corr = unpickle_corr()
-book_title = unpickle_titles()
-recs = print_recs(book_title, corr, "The Stranger Beside Me")
-print(recs)
+#corr = unpickle_corr()
+#book_title = unpickle_titles()
+#recs = print_recs(book_title, corr, "The Stranger Beside Me")
+#print(recs)
