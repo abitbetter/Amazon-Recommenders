@@ -29,11 +29,9 @@ def print_recs(book_title, corr, title):
 
     top_5_idx = np.argsort(corr_target)[-6:-1]
 
-    recs = {}
-    counter = 0
+    recs = ()
     for i in top_5_idx:
-       counter+=1
-       recs[str(counter)]=[book_title[i]]
+       recs = recs.append(book_title[i])
     return recs
 
 #top_5_values = [book_title[i] for i in top_5_idx]
@@ -50,4 +48,3 @@ def print_recs(book_title, corr, title):
 #book_title = unpickle_titles()
 #recs = print_recs(book_title, corr, "The Stranger Beside Me")
 #print(recs)
-

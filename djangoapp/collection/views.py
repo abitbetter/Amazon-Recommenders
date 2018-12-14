@@ -37,7 +37,7 @@ class ResultsView(TemplateView):
 				results = item_item_recommendation(item_emdedding_distance_matrix = item_item_dist,
 				                                    item_id = input,
 				                                    item_dict = dict,
-				                                    n_items = 4, show=False)
+				                                    n_items = 5, show=False)
 			args = {'results': results, 'input': input, 'model_type': model_type}
 		return render(request, template_name, args)
 
