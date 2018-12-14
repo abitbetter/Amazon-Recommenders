@@ -16,15 +16,13 @@
 			<table id="resultsTable" class="table table-hover table-bordered">
 				<thead>
 					<tr>
-						<th scope="col">#</th>
 						<th scope="col">Book Title</th>
 					</tr>
 				</thead>
 				<tbody>
-					{% for k, v in results.items %}
+					{% for result in results %}
 						<tr>
-							<th scope="row">{{k}}</th>
-							<td>{{v}}</td>
+							<th scope="row">{{result}}</th>
 						</tr>
 					{% endfor %}
 				</tbody>

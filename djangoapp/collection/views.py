@@ -8,14 +8,7 @@ from collection.tables import ResultsTable
 from django.views.generic import TemplateView
 from collection.forms import HomeForm
 from collection.dbrouter import MultiDBModelAdmin
-from collection.Unpickle import unpickle, get_index_from_name, print_similar_books, open_data, wrangled_data
-
-# Create your views here.
-def index(request):
-	results = Results.objects.all().order_by('name')
-	return render(request, 'index.html', {
-		'results' : results,
-	})
+#from collection.Unpickle import unpickle, get_index_from_name, print_similar_books, open_data, wrangled_data
 
 class ResultsView(TemplateView):
 	template_name = "results.html"
@@ -26,23 +19,27 @@ class ResultsView(TemplateView):
 		if form.is_valid():
 			form.save()
 			input = form.cleaned_data['post']
-			df = open_data(wrangled_data)
+			#df = open_data(wrangled_data)
 			if request.GET.get('knn'):
 				model_type = 'K Nearest Neighbors'
 				model = unpickle()
 				results = print_similar_books(df, query=input, model=model)
-				#results = {'1': 'Abraham Lincoln: Vampire Hunter', '2': "There's No Place Like Space: All About Our Solar System (Cat in the Hat's Learning Library)", '3': 'And When She Was Good: A Novel', '4': "George Washington's Secret Six: The Spy Ring That Saved the American Revolution"}
-
+				#results = {'Abraham Lincoln: Vampire Hunter', "There's No Place Like Space: All About Our Solar System (Cat in the Hat's Learning Library)", 'And When She Was Good: A Novel', "George Washington's Secret Six: The Spy Ring That Saved the American Revolution"}
+			elif request.GET.get('svd'):
+				model_type = 'Singular Value Decomposition'
+				corr = unpickle_corr()
+				book_title = unpickle_titles()
+				results = print_recs(book_title, corr, input)
+			elif request.GET.get('nmf'):
+				model_type = 'Non-negative Matrix Factorization'
+				item_item_dist = unpickle_matrix()
+				dict = unpickle_dict()
+				results = item_item_recommendation(item_emdedding_distance_matrix = item_item_dist,
+				                                    item_id = input,
+				                                    item_dict = dict,
+				                                    n_items = 4, show=False)
 			args = {'results': results, 'input': input, 'model_type': model_type}
 		return render(request, template_name, args)
-
-def result_detail(request, slug):
-	#grab the object
-	result=Results.objects.get(slug=slug)
-	#and pass to the template
-	return render(request, 'results/result_detail.html', {
-		'result': result,
-	})
 
 class HomeView(TemplateView):
 	template_name = 'base.html'
