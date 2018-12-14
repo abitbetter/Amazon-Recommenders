@@ -1,7 +1,6 @@
 from django.shortcuts import render
 from collection.models import Results
-from collection.modelsfile import Books
-from collection.modelsfile import Movies
+from collection.models import KnnRecommendation
 from django_tables2 import RequestConfig
 from collection.tables import ResultsTable
 
@@ -21,9 +20,11 @@ class ResultsView(TemplateView):
 			input = form.cleaned_data['post']
 			#df = open_data(wrangled_data)
 			if request.GET.get('knn'):
+				template_name = 'knnresults.html'
 				model_type = 'K Nearest Neighbors'
-				model = unpickle()
-				results = print_similar_books(df, query=input, model=model)
+				#model = unpickle()
+				results = KnnRecommendation.objects.all().filter(books=input).using('knn')
+				#results = print_similar_books(df, query=input, model=model)
 				#results = {'Abraham Lincoln: Vampire Hunter', "There's No Place Like Space: All About Our Solar System (Cat in the Hat's Learning Library)", 'And When She Was Good: A Novel', "George Washington's Secret Six: The Spy Ring That Saved the American Revolution"}
 			elif request.GET.get('svd'):
 				model_type = 'Singular Value Decomposition'

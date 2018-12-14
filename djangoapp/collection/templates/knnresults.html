@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% block title %}
+	Results - {{ block.super }}
+{% endblock title %}
+
+{% block content %}
+	<div id="container">
+
+		<h4>
+			<p>Recommendations for</br>
+				"{{ input }}",</br>
+				using {{ model_type }}:</p>
+
+		</h4>
+
+			<table id="resultsTable" class="table table-hover table-bordered">
+				<thead>
+					<tr>
+						<th scope="col">Book Title</th>
+					</tr>
+				</thead>
+				<tbody>
+
+							{% for result in results %}
+						<tr>
+							<th scope="row">{{result.recommendation_1}}</th>
+						</tr>
+						<tr>
+							<th scope="row">{{result.recommendation_2}}</th>
+						</tr>
+						<tr>
+							<th scope="row">{{result.recommendation_3}}</th>
+						</tr>
+						<tr>
+							<th scope="row">{{result.recommendation_4}}</th>
+						</tr>
+						<tr>
+							<th scope="row">{{result.recommendation_5}}</th>
+						</tr>
+							{% endfor %}
+
+				</tbody>
+			</table>
+
+	</div>
+{% endblock content %}

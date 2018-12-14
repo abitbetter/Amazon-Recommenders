@@ -91,7 +91,7 @@ DATABASES = {
     },
 	'knn': {
 		'ENGINE': 'django.db.backends.sqlite3',
-		'NAME': '/db/knn_recommendations.db',
+		'NAME': os.path.join(BASE_DIR, 'knn_recommendations_II.db'),
 	}
 }
 
