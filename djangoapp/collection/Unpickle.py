@@ -4,10 +4,10 @@ import sqlite3 as sql
 from sklearn.neighbors import NearestNeighbors
 
 #may need to move into function
-wrangled_data = "C:/Users/mches/Dropbox/Georgetown Data Science -- Team Amazon/wrangled_knn_data.db"
+wrangled_data = "/db/wrangled_knn_data.db"
 
 def unpickle():
-    file = "C:/Users/mches/Documents/App/finalized_model.sav"
+    file = "/db/finalized_model.sav"
     clf = pickle.load(open(file, "rb"))
     return clf
 
@@ -26,13 +26,13 @@ def print_similar_books(review_data,query=None,id=None, model=None):
     if id:
         for id in indices2[id][1:]:
             print(review_data.iloc[id]["product_title"])
-    if query:
-        found_id = get_index_from_name(query, df)
+    if query:        
+        found_id = get_index_from_name(query, review_data)
         counter=0
         recs={}
         for id in indices2[found_id][1:]:
             counter+=1
-            recs['Recommendation Number '+str(counter)]=review_data.iloc[id]["product_title"]
+            recs[str(counter)]=review_data.iloc[id]["product_title"]
         return recs
            # print(indices2[found_id])
 
